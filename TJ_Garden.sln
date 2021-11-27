@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Garden_Log", "Garden_Log\Garden_Log.pyproj", "{4780510A-A51B-487C-8CCF-D5DABBF4A0B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Garden_API", "Garden_API\Garden_API.csproj", "{5D88C739-A695-427A-ADE1-025CF9ED91B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BA63FBA9-A3D7-4AB5-A0A5-886C6880A21F}"
+	ProjectSection(SolutionItems) = preProject
+		db\SQLite\data.py = db\SQLite\data.py
+		db\SQLite\garden.db = db\SQLite\garden.db
+		db\SQLite\schema.py = db\SQLite\schema.py
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4780510A-A51B-487C-8CCF-D5DABBF4A0B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4780510A-A51B-487C-8CCF-D5DABBF4A0B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4780510A-A51B-487C-8CCF-D5DABBF4A0B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4780510A-A51B-487C-8CCF-D5DABBF4A0B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D88C739-A695-427A-ADE1-025CF9ED91B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D88C739-A695-427A-ADE1-025CF9ED91B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D88C739-A695-427A-ADE1-025CF9ED91B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D88C739-A695-427A-ADE1-025CF9ED91B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F104AD8F-586F-4DCF-AED7-48A395DD9E6D}
+	EndGlobalSection
+EndGlobal
