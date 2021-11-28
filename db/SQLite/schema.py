@@ -32,7 +32,7 @@ plot = db.Table('Plots', metadata,
 
 schedule = db.Table('Schedule', metadata,
 	db.Column('Schedule_Id', db.Integer, primary_key=True),
-	db.Column('Plot_Id', db.Integer, foreign_key=True),
+	db.Column('Plot_Id', db.Integer),
 	db.Column('Event_Id', db.Integer))
 
 event = db.Table('Events', metadata,

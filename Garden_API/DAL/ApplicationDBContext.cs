@@ -17,6 +17,14 @@ namespace Garden_API.DAL
         }  
         
         public DbSet<PlantDetails> Plants { get; set; }
+        
+        public DbSet<Garden_API.Models.Events> Events { get; set; }
+        
+        public DbSet<Garden_API.Models.Plots> Plots { get; set; }
+        
+        public DbSet<Garden_API.Models.Schedules> Schedules { get; set; }
+        
+        public DbSet<Garden_API.Models.Users> Users { get; set; }
 
     }
 }
