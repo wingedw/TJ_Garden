@@ -12,7 +12,7 @@ namespace Garden_API.Models
     {
         [Key]
         [Required]
-        public int Id { get; set; }
+        public int Plant_Id { get; set; }
         
         [StringLength(50)]
         public string  Plant_Type { get; set; }

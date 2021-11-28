@@ -47,7 +47,7 @@ namespace Garden_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPlantDetails(int id, PlantDetails plantDetails)
         {
-            if (id != plantDetails.Id)
+            if (id != plantDetails.Plant_Id)
             {
                 return BadRequest();
             }
@@ -81,7 +81,7 @@ namespace Garden_API.Controllers
             _context.Plants.Add(plantDetails);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPlantDetails", new { id = plantDetails.Id }, plantDetails);
+            return CreatedAtAction("GetPlantDetails", new { id = plantDetails.Plant_Id }, plantDetails);
         }
 
         // DELETE: api/PlantDetails/5
@@ -102,7 +102,7 @@ namespace Garden_API.Controllers
 
         private bool PlantDetailsExists(int id)
         {
-            return _context.Plants.Any(e => e.Id == id);
+            return _context.Plants.Any(e => e.Plant_Id == id);
         }
     }
 }
