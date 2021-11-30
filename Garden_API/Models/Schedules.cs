@@ -20,6 +20,22 @@ namespace Garden_API.Models
         [ForeignKey("Events")]
         public int Event_Id { get; set; }
 
+        public string? Secret { get; set; }
+
+
+    }
+    //subset of a model is usually referred to as a Data Transfer Object (DTO), input model, or view model
+    public class SchedulesDTO
+    {
+        [Key]
+        [Required]
+        public int Schedule_Id { get; set; }
+
+        [ForeignKey("Plot")]
+        public int Plot_Id { get; set; }
+
+        [ForeignKey("Events")]
+        public int Event_Id { get; set; }
     }
 }
 

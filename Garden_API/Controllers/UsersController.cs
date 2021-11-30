@@ -23,14 +23,14 @@ namespace Garden_API.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Users>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UsersDTO>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Select(x => MapUsersDTO(x)).ToListAsync();
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Users>> GetUsers(int id)
+        public async Task<ActionResult<UsersDTO>> GetUsers(int id)
         {
             var users = await _context.Users.FindAsync(id);
 
@@ -39,13 +39,13 @@ namespace Garden_API.Controllers
                 return NotFound();
             }
 
-            return users;
+            return MapUsersDTO(users);
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsers(int id, Users users)
+        public async Task<IActionResult> PutUsers(int id, UsersDTO users)
         {
             if (id != users.User_Id)
             {
@@ -76,12 +76,19 @@ namespace Garden_API.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Users>> PostUsers(Users users)
+        public async Task<ActionResult<Users>> PostUsers(UsersDTO usersdto)
         {
-            _context.Users.Add(users);
+            var _newuser = new Users
+            {
+                User_Id = usersdto.User_Id,
+                First_Name = usersdto.First_Name,
+                Last_Name = usersdto.Last_Name,
+                Email = usersdto.Email
+            };
+            _context.Users.Add(_newuser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUsers", new { id = users.User_Id }, users);
+            return CreatedAtAction("GetUsers", new { id = _newuser.User_Id }, _newuser);
         }
 
         // DELETE: api/Users/5
@@ -104,5 +111,14 @@ namespace Garden_API.Controllers
         {
             return _context.Users.Any(e => e.User_Id == id);
         }
+
+        private static UsersDTO MapUsersDTO(Users users) => new()
+        {
+            User_Id = users.User_Id,
+            First_Name = users.First_Name,
+            Last_Name = users.Last_Name,
+            Email = users.Email
+        };
+
     }
 }

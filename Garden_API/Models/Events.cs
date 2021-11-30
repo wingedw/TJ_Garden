@@ -18,5 +18,19 @@ namespace Garden_API.Models
 
         public string Description { get; set; }
 
+        public string? Secret { get; set; }
+
+
+    }
+    //subset of a model is usually referred to as a Data Transfer Object (DTO), input model, or view model
+    public class EventsDTO
+    {
+        [Key]
+        [Required]
+        public int Event_Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
     }
 }

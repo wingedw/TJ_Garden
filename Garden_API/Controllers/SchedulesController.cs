@@ -23,14 +23,14 @@ namespace Garden_API.Controllers
 
         // GET: api/Schedules
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Schedules>>> GetSchedules()
+        public async Task<ActionResult<IEnumerable<SchedulesDTO>>> GetSchedules()
         {
-            return await _context.Schedules.ToListAsync();
+            return await _context.Schedules.Select(x => MapSchedulesDTO(x)).ToListAsync();
         }
 
         // GET: api/Schedules/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Schedules>> GetSchedules(int id)
+        public async Task<ActionResult<SchedulesDTO>> GetSchedules(int id)
         {
             var schedules = await _context.Schedules.FindAsync(id);
 
@@ -39,20 +39,28 @@ namespace Garden_API.Controllers
                 return NotFound();
             }
 
-            return schedules;
+            return MapSchedulesDTO(schedules);
         }
 
         // PUT: api/Schedules/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSchedules(int id, Schedules schedules)
+        public async Task<IActionResult> PutSchedules(int id, SchedulesDTO schedulesdto)
         {
-            if (id != schedules.Schedule_Id)
+            if (id != schedulesdto.Schedule_Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(schedules).State = EntityState.Modified;
+            var _schedule = await _context.Schedules.FindAsync(id);
+            if (_schedule == null)
+            {
+                return NotFound();
+            }
+
+            _schedule.Schedule_Id = schedulesdto.Schedule_Id;
+            _schedule.Plot_Id = schedulesdto.Plot_Id;
+            _schedule.Event_Id = schedulesdto.Event_Id;
 
             try
             {
@@ -69,19 +77,24 @@ namespace Garden_API.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
         // POST: api/Schedules
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Schedules>> PostSchedules(Schedules schedules)
+        public async Task<ActionResult<Schedules>> PostSchedules(SchedulesDTO schedulesdto)
         {
-            _context.Schedules.Add(schedules);
+            var _newschedules = new Schedules
+            {
+                Schedule_Id = schedulesdto.Schedule_Id,
+                Plot_Id = schedulesdto.Plot_Id,
+                Event_Id = schedulesdto.Event_Id
+            };
+            _context.Schedules.Add(_newschedules);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSchedules", new { id = schedules.Schedule_Id }, schedules);
+            return CreatedAtAction("GetSchedules", new { id = _newschedules.Schedule_Id }, _newschedules);
         }
 
         // DELETE: api/Schedules/5
@@ -104,5 +117,12 @@ namespace Garden_API.Controllers
         {
             return _context.Schedules.Any(e => e.Schedule_Id == id);
         }
+        private static SchedulesDTO MapSchedulesDTO(Schedules schedules) => new()
+        {
+            Schedule_Id = schedules.Schedule_Id,
+            Plot_Id = schedules.Plot_Id,
+            Event_Id = schedules.Event_Id
+        };
+
     }
 }

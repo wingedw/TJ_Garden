@@ -23,14 +23,14 @@ namespace Garden_API.Controllers
 
         // GET: api/Events
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Events>>> GetEvents()
+        public async Task<ActionResult<IEnumerable<EventsDTO>>> GetEvents()
         {
-            return await _context.Events.ToListAsync();
+            return await _context.Events.Select(x=> MapEventsDTO(x)).ToListAsync();
         }
 
         // GET: api/Events/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Events>> GetEvents(int id)
+        public async Task<ActionResult<EventsDTO>> GetEvents(int id)
         {
             var events = await _context.Events.FindAsync(id);
 
@@ -39,20 +39,28 @@ namespace Garden_API.Controllers
                 return NotFound();
             }
 
-            return events;
+            return MapEventsDTO(events);
         }
 
         // PUT: api/Events/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvents(int id, Events events)
+        public async Task<IActionResult> PutEvents(int id, EventsDTO eventsdto)
         {
-            if (id != events.Event_Id)
+            if (id != eventsdto.Event_Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(events).State = EntityState.Modified;
+            var _event = await _context.Events.FindAsync(id);
+            if (_event ==  null)
+            {
+                return NotFound();
+            }
+
+            _event.Event_Id = eventsdto.Event_Id;
+            _event.Name = eventsdto.Name;
+            _event.Description = eventsdto.Description;
 
             try
             {
@@ -76,12 +84,18 @@ namespace Garden_API.Controllers
         // POST: api/Events
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Events>> PostEvents(Events events)
+        public async Task<ActionResult<EventsDTO>> CreateEvents(EventsDTO eventsdto)
         {
-            _context.Events.Add(events);
+            var _newevent = new Events
+            {
+                Event_Id = eventsdto.Event_Id,
+                Name = eventsdto.Name,
+                Description = eventsdto.Description
+            };
+            _context.Events.Add(_newevent);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEvents", new { id = events.Event_Id }, events);
+            return CreatedAtAction("GetEvents", new { id = _newevent.Event_Id }, _newevent);
         }
 
         // DELETE: api/Events/5
@@ -104,5 +118,12 @@ namespace Garden_API.Controllers
         {
             return _context.Events.Any(e => e.Event_Id == id);
         }
+
+        private static EventsDTO MapEventsDTO(Events events) => new()
+        {
+            Event_Id = events.Event_Id,
+            Name = events.Name,
+            Description = events.Description
+        };
     }
 }

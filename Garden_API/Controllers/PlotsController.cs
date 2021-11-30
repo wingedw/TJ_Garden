@@ -23,14 +23,14 @@ namespace Garden_API.Controllers
 
         // GET: api/Plots
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Plots>>> GetPlots()
+        public async Task<ActionResult<IEnumerable<PlotsDTO>>> GetPlots()
         {
-            return await _context.Plots.ToListAsync();
+            return await _context.Plots.Select(x => MapPlotsDTO(x)).ToListAsync();
         }
 
         // GET: api/Plots/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Plots>> GetPlots(int id)
+        public async Task<ActionResult<PlotsDTO>> GetPlots(int id)
         {
             var plots = await _context.Plots.FindAsync(id);
 
@@ -39,20 +39,29 @@ namespace Garden_API.Controllers
                 return NotFound();
             }
 
-            return plots;
+            return MapPlotsDTO(plots);
         }
 
         // PUT: api/Plots/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlots(int id, Plots plots)
+        public async Task<IActionResult> PutPlots(int id, PlotsDTO plotsdto)
         {
-            if (id != plots.Plot_Id)
+            if (id != plotsdto.Plot_Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(plots).State = EntityState.Modified;
+            var _plot = await _context.Plots.FindAsync(id);
+            if (_plot == null)
+            {
+                return NotFound();
+            }
+
+            _plot.Plot_Id = plotsdto.Plot_Id;
+            _plot.Plant_Id = plotsdto.Plot_Id;
+            _plot.X_Location = plotsdto.X_Location;
+            _plot.Y_Location = plotsdto.Y_Location;
 
             try
             {
@@ -76,12 +85,19 @@ namespace Garden_API.Controllers
         // POST: api/Plots
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Plots>> PostPlots(Plots plots)
+        public async Task<ActionResult<Plots>> PostPlots(PlotsDTO plotsdto)
         {
-            _context.Plots.Add(plots);
+            var _newplot = new Plots
+            {
+                Plot_Id = plotsdto.Plot_Id,
+                Plant_Id = plotsdto.Plot_Id,
+                X_Location = plotsdto.X_Location,
+                Y_Location = plotsdto.Y_Location
+            };
+            _context.Plots.Add(_newplot);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPlots", new { id = plots.Plot_Id }, plots);
+            return CreatedAtAction("GetPlots", new { id = _newplot.Plot_Id }, _newplot);
         }
 
         // DELETE: api/Plots/5
@@ -104,5 +120,14 @@ namespace Garden_API.Controllers
         {
             return _context.Plots.Any(e => e.Plot_Id == id);
         }
+        private static PlotsDTO MapPlotsDTO(Plots plots) => new()
+        {
+            Plot_Id = plots.Plot_Id,
+            Plant_Id = plots.Plot_Id,
+            X_Location = plots.X_Location,
+            Y_Location = plots.Y_Location
+        };
+
+
     }
 }
